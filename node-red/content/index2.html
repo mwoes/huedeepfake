@@ -1,0 +1,57 @@
+<script src="http://172.17.0.1:3000/socket.io/socket.io.js"></script>
+<script>
+var hostname = window.location.hostname
+var socket = io.connect("http://172.17.0.1:3000");
+</script>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+    <title>Hue Touch Demo</title>
+    <link rel="stylesheet" href="./css/styles.css">
+    <script src="./js/settings.js"></script>
+</head>
+<body>
+    <header>
+        <img src="./imgs/hue.png" alt="Philips Hue">
+    </header>
+
+    <div id="home">
+        <div class="bulb">
+            <svg id="lightbulb-el" class="off" viewBox="0 0 109 178.8">
+            	<path id="lightbulb-top" d="M93.3,3.5c-17.3-3-38.8-3-38.8-3s-21.4,0-38.8,3s-16,18.8-14.2,22.7c1,3,8.3,21.8,8.3,21.8
+            		h89.4c0,0,7.2-18.8,8.3-21.8C109.2,22.3,110.6,6.5,93.3,3.5z"/>
+            	<path id="lightbulb-body" d="M54.6,55H12.5c6.7,22.1,13.1,54.4,16,87.9h51.9c3-33.5,9.3-65.9,16-87.9H54.6z"/>
+            	<path id="lightbulb-body-base" d="M78.7,145.6c-0.2,1.5-0.8,2.9-1.8,4c-1.2,1.1-2.7,1.7-4.3,1.6H36.4
+            		c-4.8,0-6-3.7-6.3-5.6L78.7,145.6z"/>
+            	<path id="lightbulb-bar-1" d="M71.5,154.4v5.6H37.4v-5.6L71.5,154.4z"/>
+            	<path id="lightbulb-bar-2" d="M71.5,169.1H37.4v-5.6h34.1V169.1z"/>
+            	<path id="lightbulb-base" d="M66.5,172.9c-6.6,6.7-17.5,6.6-24.1,0L66.5,172.9z"/>
+            </svg>
+        </div>
+        <div>
+            <div class="controls_start"><h4>1. Start by turning on the light.</h4></div>
+            <div class="controls">
+                    <h4>Toggle the light:</h4><h5>off | on</h5>
+                    <input class="tgl tgl-light" id="cb1" type="checkbox" />
+                    <label class="tgl-btn" for="cb1"></label>
+            </div>
+			<div class="color-slider-title"><h4>2. Control the lights brightness.</h4></div>
+			<div class="color-slider slider-grey"></div>
+			<div class="color-picker-text"><h4>3. Select the lights color.</h4></div>
+            <div class="color-picker-radial">
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <img src="./imgs/philips.png" alt="Philips" />
+    </footer>
+
+    <script src="./js/ColorPicker.js"></script>
+    <script src="./js/scripts.js"></script>
+</body>
+</html>
+
+
+

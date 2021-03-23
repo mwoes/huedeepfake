@@ -1,0 +1,276 @@
+[
+    {
+        "id": "58325b55.203894",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "2ebb6f0e.9d015",
+        "type": "nodebot",
+        "z": "",
+        "name": "firmata",
+        "username": "",
+        "password": "",
+        "boardType": "firmata",
+        "serialportName": "/dev/ttyACM0",
+        "connectionType": "local",
+        "mqttServer": "",
+        "pubTopic": "",
+        "subTopic": "",
+        "tcpHost": "",
+        "tcpPort": "",
+        "sparkId": "",
+        "sparkToken": "",
+        "beanId": "",
+        "impId": "",
+        "uuid": "",
+        "token": "",
+        "sendUuid": ""
+    },
+    {
+        "id": "b13bbd.cc5ab44",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#1bbfff",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0094ce",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "364d25b.d9befda",
+        "type": "socketio-config",
+        "z": "",
+        "port": "3000",
+        "sendClient": "true",
+        "path": "/socket.io",
+        "bindToNode": false
+    },
+    {
+        "id": "af97e558.d482b8",
+        "type": "johnny5",
+        "z": "58325b55.203894",
+        "name": "",
+        "func": "var pixel = global.get('pixel');\n\nvar strip = new pixel.Strip({\n    board: board,\n    controller: \"FIRMATA\",\n    data: 6,\n    length: 12\n});\n\nglobal.set('pixel',pixel);\nglobal.set('strip',strip);\n\nvar msg = { payload: \"init\" };\n\nnode.send(msg);",
+        "board": "2ebb6f0e.9d015",
+        "noerr": 0,
+        "x": 360,
+        "y": 280,
+        "wires": [
+            [
+                "45c0040c.6ad18c"
+            ]
+        ]
+    },
+    {
+        "id": "45c0040c.6ad18c",
+        "type": "function",
+        "z": "58325b55.203894",
+        "name": "StripControl",
+        "func": "var pixel = global.get('pixel');\nvar strip = global.get('strip');\n\nvar blinker;\nvar transition = false;\nvar color = [0, 0, 0];\nvar i = 0;\nvar lightOn = false;\n\nfunction turnOnHue(rgb) {\n  color = rgb;\n  while (color[0] < 255 || color[1] < 255 || color[2] < 255) {\n    if (color[0] < 255) { color[0]++; }\n    if (color[1] < 255) { color[1]++; }\n    if (color[2] < 255) { color[2]++; }\n    strip.color(color);\n    strip.show();\n    i++;\n  }\n  i = 0;\n  color = [255, 255, 255];\n  strip.color(color);\n  strip.show();\n}\n\nfunction turnOffHue(rgb) {\n  color = rgb;\n  while ((color[0] + color[1] + color[2]) !== 0) {\n    if (color[0] >= 1) { color[0]--; }\n    if (color[1] >= 1) { color[1]--; }\n    if (color[2] >= 1) { color[2]--; }\n    strip.color(color);\n    strip.show();\n    i++;\n  }\n  i = 0;\n  color = [0, 0, 0];\n  strip.color(color);\n  strip.show();\n}\n\nif(msg.payload == \"init\") {\n    strip.on(\"ready\", function() {\n        console.log('neopixel ring ready');\n        turnOffHue([0, 0, 0]);\n        global.set('strip',strip);\n    })\n}\n\nif(msg.socketIOEvent == \"commandPWR\") {\n    var pwrState = msg.payload[0];\n    if(pwrState == \"on\") {\n        turnOnHue(msg.payload[1]);\n        msg.socketIOEvent = \"power\";\n        msg.payload = true;\n        return [msg,msg];\n    }\n    if(pwrState == \"off\") {\n        turnOffHue(msg.payload[1]);\n        msg.socketIOEvent = \"power\";\n        msg.payload = false;\n        return [null,msg];\n    }\n}\n\nfunction rgbToHex(rgb) { \n  var hex = Number(rgb).toString(16);\n  if (hex.length < 2) {\n       hex = \"0\" + hex;\n  }\n  return hex;\n}\n\nfunction rgbtohex([r,g,b]) {   \n  var red = rgbToHex(parseInt(r));\n  var green = rgbToHex(parseInt(g));\n  var blue = rgbToHex(parseInt(b));\n  return red+green+blue;\n}\n\nif(msg.socketIOEvent == \"command\") {\n    strip.color(msg.payload);\n    strip.show();\n    msg.socketIOEvent = \"color\";\n    msg.payload = rgbtohex(msg.payload);\n    node.send([[msg],[msg]])\n}",
+        "outputs": 2,
+        "noerr": 0,
+        "x": 610,
+        "y": 280,
+        "wires": [
+            [
+                "8b5ba88e.ec4378"
+            ],
+            [
+                "87a34238.ee60a"
+            ]
+        ]
+    },
+    {
+        "id": "8b5ba88e.ec4378",
+        "type": "debug",
+        "z": "58325b55.203894",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 790,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "4399831a.c0f85c",
+        "type": "function",
+        "z": "58325b55.203894",
+        "name": "node-pixel-globals",
+        "func": "var pixel = global.get('pixel');\nvar strip = global.get('strip');\n\nglobal.set('strip');",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 750,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c7ec18a.6c9e0e8",
+        "type": "inject",
+        "z": "58325b55.203894",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 520,
+        "y": 180,
+        "wires": [
+            [
+                "4399831a.c0f85c"
+            ]
+        ]
+    },
+    {
+        "id": "d294a33b.14f81",
+        "type": "socketio-in",
+        "z": "58325b55.203894",
+        "name": "Socket.io",
+        "server": "364d25b.d9befda",
+        "rules": [
+            {
+                "v": "commandPWR"
+            },
+            {
+                "v": "command"
+            }
+        ],
+        "x": 260,
+        "y": 340,
+        "wires": [
+            [
+                "490cad30.843504"
+            ]
+        ]
+    },
+    {
+        "id": "490cad30.843504",
+        "type": "delay",
+        "z": "58325b55.203894",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "20",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": true,
+        "x": 420,
+        "y": 340,
+        "wires": [
+            [
+                "45c0040c.6ad18c"
+            ]
+        ]
+    },
+    {
+        "id": "87a34238.ee60a",
+        "type": "socketio-out",
+        "z": "58325b55.203894",
+        "name": "",
+        "server": "364d25b.d9befda",
+        "x": 820,
+        "y": 340,
+        "wires": []
+    }
+]

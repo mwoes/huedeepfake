@@ -1,0 +1,5 @@
+pcm.usb { type hw; card Device; }
+ctl.usb { type hw; card Device; }
+
+pcm.!default pcm.usb
+ctl.!default ctl.usb

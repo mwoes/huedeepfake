@@ -1,0 +1,28 @@
+version: '2.1'
+volumes:
+  node-red-data:
+services:
+  node-red:
+    build: node-red
+    container_name: node-red
+    privileged: true
+    volumes:
+       - 'node-red-data:/data'
+    ports:
+       - "1880:1880"
+       - "3000:3000"
+    restart: always
+  electronjs:
+    build: electronjs
+    container_name: electron
+    privileged: true
+    pid: "host"
+    labels:
+      io.balena.features.kernel-modules: '1'
+      io.balena.features.firmware: '1'
+      io.balena.features.dbus: '1'
+      io.balena.features.resin-api: '1'
+    restart: always
+    environment:
+      UDEV: '1'
+      URL_LAUNCHER_URL: 'http://node-red:1880/'
